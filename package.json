@@ -1,0 +1,25 @@
+{
+  "name": "codespaces-react",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mongoose": "^8.5.4",
+    "multer": "^1.4.5-lts.1",
+    "bcryptjs": "^3.0.2",
+    "jsonwebtoken": "^9.0.2",
+    "multer-storage-cloudinary": "^4.0.0",
+    "axios": "^1.7.9",
+    "cloudinary": "^1.41.3"
+  },
+  "scripts": {
+    "start": "node blogsPanel.js",
+    "dev": "node blogsPanel.js",
+    "backend": "node blogsPanel.js"
+  },
+  "main": "blogsPanel.js",
+  "license": "ISC"
+}
