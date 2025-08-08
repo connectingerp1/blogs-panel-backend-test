@@ -12,7 +12,7 @@ const jwt = require("jsonwebtoken");
 const path = require("path");
 
 // Import Blog model from models folder (no schema/model declarations here)
-const Blog = require('../models/Blog');
+const Blog = require('./models/Blog');
 
 const app = express();
 
