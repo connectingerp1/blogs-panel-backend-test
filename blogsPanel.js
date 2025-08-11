@@ -1,5 +1,3 @@
-// blogsPanel.js (server file) - Corrected and cleaned
-
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
@@ -10,9 +8,6 @@ const cloudinary = require("cloudinary").v2;
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const path = require("path");
-
-// Import Blog model from models folder (no schema/model declarations here)
-const Blog = require('../src/models/Blog');
 
 const app = express();
 
@@ -64,11 +59,46 @@ const connectDB = async () => {
     process.exit(1);
   }
 };
-
-// Connect to MongoDB
 connectDB();
 
-// User Schema and Model (keep this here or move to a separate file similarly)
+// ======================
+// Blog Schema & Model
+// ======================
+const blogSchema = new mongoose.Schema(
+  {
+    title: { type: String, required: true },
+    slug: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+      index: true,
+    },
+    content: { type: String, required: true },
+    category: { type: String, required: true },
+    subcategory: {
+      type: String,
+      required: true,
+      enum: ["Article", "Tutorial", "Interview Questions"],
+    },
+    author: { type: String, required: true },
+    image: { type: String },
+    imagePublicId: { type: String },
+    status: {
+      type: String,
+      enum: ["Trending", "Featured", "Editor's Pick", "Recommended", "None"],
+      default: "None",
+    },
+  },
+  { timestamps: true }
+);
+
+const Blog = mongoose.models.Blog || mongoose.model("Blog", blogSchema);
+
+// ======================
+// User Schema & Model
+// ======================
 const userSchema = new mongoose.Schema(
   {
     username: { type: String, required: true, unique: true, trim: true },
@@ -94,16 +124,14 @@ userSchema.pre("save", async function (next) {
 
 const User = mongoose.models.User || mongoose.model("User", userSchema);
 
-// Cloudinary config
+// ======================
+// Cloudinary Config
+// ======================
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
-
-// Helper functions (getPublicIdFromUrl, deleteCloudinaryImage, generateSlug, findUniqueSlug)...
-
-// [Keep your helper functions for Cloudinary and slug generation here exactly as before]
 
 // JWT authentication middleware
 const authenticateToken = (req, res, next) => {
@@ -123,9 +151,9 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
-// Authentication routes: register and login (keep as is)
-
-// Blog routes using imported Blog model
+// ======================
+// Blog Routes
+// ======================
 app.get("/api/blogs", async (req, res) => {
   try {
     const { category, subcategory, status, limit, skip } = req.query;
@@ -152,11 +180,8 @@ app.get("/api/blogs", async (req, res) => {
   }
 });
 
-// Other Blog routes (by slug, by id, create, update, delete) - keep as in your provided code,
-// just using imported Blog model.
-
-// Start server
+// ======================
+// Start Server
+// ======================
 const PORT = process.env.BLOG_PORT || 5002;
 app.listen(PORT, () => console.log(`🚀 Blog server running on port ${PORT}`));
-
-
